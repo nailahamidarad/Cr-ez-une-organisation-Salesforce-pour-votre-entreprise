@@ -1,0 +1,23 @@
+<template>
+    <lightning-card title="Produits de l'Opportunité" icon-name="standard:opportunity">
+        <!-- Affichage du tableau uniquement si des produits sont présents -->
+        <template if:true={hasOpportunityProducts}>
+            <lightning-datatable 
+                data={opportunityProducts}
+                columns={columns}
+                key-field="Id"
+                onrowdelete={handleRowDeletion}
+                onrowview={handlerRowViewer}>
+            </lightning-datatable>
+        </template>
+        
+        <!-- Affichage du message si aucun produit -->
+        <template if:false={hasOpportunityProducts}>
+            <div class="slds-text-align_left slds-p-around_medium">
+                <p>Vous n'avez aucune ligne de produits pour le moment.</p>
+                <p>1. Veuillez tout d'abord sélectionner un Catalogue (Pricebook)</p>
+                <p>2. Sélectionnez ensuite les produits à ajouter.</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>
