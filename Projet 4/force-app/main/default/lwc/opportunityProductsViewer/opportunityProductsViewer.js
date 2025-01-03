@@ -1,34 +1,34 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import getOpportunityProductsbyOpportunityId from '@salesforce/apex/OpportunityProductsViewerController.getOpportunityProductsbyOpportunityId';
 import { NavigationMixin } from 'lightning/navigation';
+import deleteOpportunityProduct from '@salesforce/apex/OpportunityProductsViewerController.deleteOpportunityProduct';
 
-export default class AccountOpportunitiesViewer extends NavigationMixin(LightningElement) {
+export default class OpportunityProductsViewer extends LightningElement {
     @api recordId;
     @track opportunityProducts = [];
-    @track noresult = false;
-
+    
     columns = [
         { label: 'Nom du Produit', fieldName: 'Product2Name', type: 'text' },
-        { label: 'Quantité', fieldName: 'Quantity', type: 'currency' },
-        { label: 'Prix unitaire', fieldName: 'UnitPrice', type: 'currency' },
-        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'currency' },
+        { label: 'Quantité', fieldName: 'Quantity', type: 'text' },
+        { label: 'Prix unitaire', fieldName: 'UnitPrice', type: 'currency', cellAttributes: { alignment: 'left' } },
+        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'currency', cellAttributes: { alignment: 'left' } },
         { label: 'Quantité en Stock', fieldName: 'Product2QuantityInStock__c', type: 'text' },
         { label: 'Supprimer', type: 'button-icon',
             typeAttributes: {
                 label: 'Supprimer',
                 name: 'delete',
                 iconName: 'utility:delete',
-                variant: 'neutral'
+                variant: 'neutral',
             }
         },
-       { label: 'Voir produit', type: 'button',
+        { label: 'Voir produit', type: 'button',
             typeAttributes: {
                 label: 'View Product',
-                name: 'viewProduct',
+                name: 'open',
                 iconName: 'utility:preview',
                 iconPosition: 'left',
-                variant: 'brand'
-            }
+                variant: 'brand',
+            },
         }
     ];
 
@@ -37,10 +37,12 @@ export default class AccountOpportunitiesViewer extends NavigationMixin(Lightnin
         this.wiredResult = result;
 
         if (result.data) {
-            this.opportunityProducts = result.data;
-            this.noresult = this.opportunityProducts.length === 0;
+            this.opportunityProducts = result.data.map(item => ({
+                ...item,
+                Product2Name: item.Product2.Name,
+                Product2QuantityInStock__c: item.Product2.QuantityInStock__c,
+            }));
         } else if (result.error) {
-            this.noresult = true; 
             this.opportunityProducts = [];
         }
     }
@@ -49,16 +51,30 @@ export default class AccountOpportunitiesViewer extends NavigationMixin(Lightnin
         return Array.isArray(this.opportunityProducts) && this.opportunityProducts.length > 0;
     }
 
-    handleRowDeletion(event) {
-        const actionName = event.detail.action.name;
-        const row = event.detail.row;
-
-        if (actionName === 'delete') {
-            this.deleteRow(row);
+    handleRowAction(event) {
+        const actionName = event.detail.action.name;  
+        const recordId = event.detail.row.Id;  
+    
+        if (actionName === 'open') {  
+            this.openRecord(recordId);
+        } else if (actionName === 'delete') {  
+            this.deleteRow(recordId);
         }
     }
 
-    deleteRow(row) {
-        this.opportunityProducts = this.opportunityProducts.filter(item => item.Id !== row.Id);
+    openRecord(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',  
+            attributes: {
+                recordId: recordId,   
+                objectApiName: 'OpportunityLineItem', 
+                actionName: 'view'  
+            }
+        });
     }
+
+    deleteRecord(recordId) {
+        deleteOpportunityProduct({ opportunityLineItemId: recordId })  
+
+}
 }
