@@ -1,6 +1,14 @@
 <template>
-    <lightning-card title="Produits de l'Opportunité" icon-name="standard:opportunity">
-        <!-- Affichage du tableau uniquement si des produits sont présents -->
+    <lightning-card title={datatableTitle} icon-name="standard:opportunity">
+
+        <template if:true={hasInsufficientStock}>
+            <div class="slds-notify slds-notify_alert slds-alert_warning slds-text-align_left" role="alert">
+                <span class="slds-text-body_small slds-text-heading_medium">
+                    {quantityErrorMessage}
+                </span>
+            </div>
+        </template>
+
         <template if:true={hasOpportunityProducts}>
             <lightning-datatable 
                 data={opportunityProducts}
@@ -10,12 +18,9 @@
             </lightning-datatable>
         </template>
         
-        <!-- Affichage du message si aucun produit -->
         <template if:false={hasOpportunityProducts}>
             <div class="slds-text-align_left slds-p-around_medium">
-                <p>Vous n'avez aucune ligne de produits pour le moment.</p>
-                <p>1. Veuillez tout d'abord sélectionner un Catalogue (Pricebook)</p>
-                <p>2. Sélectionnez ensuite les produits à ajouter.</p>
+                {noProductMessage}
             </div>
         </template>
     </lightning-card>
