@@ -46,12 +46,12 @@ export default class OpportunityProductsViewer extends NavigationMixin(Lightning
     wiredProfile({ data }) {
         if (data) {
             this.profileName = data;
-        if (this.profileName === 'System Administrator') {
+        if (this.profileName === 'System Administrator' || this.profileName=== 'Administrateur système') {
             this.columns.push({
                     label: ViewProduct, 
                     type: 'button', 
                     typeAttributes: {
-                        label: 'View Product',
+                        label: ViewProduct,
                         name: 'open',
                         iconName: 'utility:preview',
                         iconPosition: 'left',

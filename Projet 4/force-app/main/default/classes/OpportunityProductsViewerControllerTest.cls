@@ -21,8 +21,8 @@ public class OpportunityProductsViewerControllerTest {
         List<OpportunityLineItem> result = OpportunityProductsViewerController.getOpportunityProductsbyOpportunityId(testOpportunity.Id);
         Test.stopTest();
         
-        System.assertNotEquals(result, null, 'La liste des OpportunityLineItems ne doit pas être nulle.');
-        System.assertEquals(result.size(), 1, 'Il doit y avoir un produit d\'opportunité retourné.');
+        System.assertNotEquals(result, null, 'La liste des OLI ne doit pas être nulle.');
+        System.assertEquals(result.size(), 1, 'Il doit y avoir un OLI retourné.');
     }
 
     @isTest
@@ -40,7 +40,7 @@ public class OpportunityProductsViewerControllerTest {
         insert oliToDelete;
         
         OpportunityLineItem oliCheck = [SELECT Id FROM OpportunityLineItem WHERE Id = :oliToDelete.Id LIMIT 1];
-        System.assertNotEquals(oliCheck, null, 'Le produit d\'opportunité doit être présent avant la suppression.');
+        System.assertNotEquals(oliCheck, null, 'Le OLI doit être présent avant la suppression.');
         
         Test.startTest();
         OpportunityProductsViewerController.deleteOpportunityProduct(oliToDelete.Id);
@@ -53,7 +53,6 @@ public class OpportunityProductsViewerControllerTest {
         String profileName = OpportunityProductsViewerController.getUserProfileName();
         Test.stopTest();
         
-        System.assertNotEquals(profileName, null, 'Le nom du profil ne doit pas être nul.');
-        System.assertEquals(profileName, 'System Administrator', 'Le nom du profil retourné doit correspondre au profil de l\'utilisateur actuel.');
+        System.assertEquals(profileName, 'System Administrator', 'Le nom du profil retourné doit correspondre à System Administrator');
     }
 }
