@@ -79,7 +79,7 @@ public static void createTestUsers() {
     Profile salesProfile = [SELECT Id FROM Profile WHERE Name = 'Custom: Sales Profile' LIMIT 1];
 
     User sysAdminUser = new User(
-        Username = 'sysadmin@test.com',
+        Username = 'sysadmin@test.comnh0125',
         Email = 'sysadmin@test.com',
         Alias = 'sysadmin',
         ProfileId = sysAdminProfile.Id,
@@ -89,12 +89,13 @@ public static void createTestUsers() {
         FirstName = 'System',
         LastName = 'Admin',
         CompanyName = 'Test Company',
-        IsActive = true
+        IsActive = true,
+        EmailEncodingKey = 'UTF-8'  
     );
     insert sysAdminUser;
 
     User salesUser = new User(
-        Username = 'sales@test.com',
+        Username = 'sales@test.comnh0125',
         Email = 'sales@test.com',
         Alias = 'sales',
         ProfileId = salesProfile.Id,
@@ -104,7 +105,8 @@ public static void createTestUsers() {
         FirstName = 'Sales',
         LastName = 'User',
         CompanyName = 'Test Company',
-        IsActive = true
+        IsActive = true,
+        EmailEncodingKey = 'UTF-8'  
     );
     insert salesUser;
 }

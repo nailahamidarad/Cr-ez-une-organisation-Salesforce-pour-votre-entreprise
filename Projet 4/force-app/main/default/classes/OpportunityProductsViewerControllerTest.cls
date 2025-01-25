@@ -47,29 +47,29 @@ public class OpportunityProductsViewerControllerTest {
         OpportunityProductsViewerController.deleteOpportunityProduct(oliToDelete.Id);
         Test.stopTest();
 
-        OpportunityLineItem deletedOliCheck = [SELECT Id FROM OpportunityLineItem WHERE Id = :oliToDelete.Id LIMIT 1];
-        System.assertEquals(deletedOliCheck, null, 'L OLI doit être supprimée.');
+        try {
+            OpportunityLineItem deletedOliCheck = [SELECT Id FROM OpportunityLineItem WHERE Id = :oliToDelete.Id LIMIT 1];
+            System.assertEquals(deletedOliCheck, null, 'L OLI doit être supprimée.');
+        } catch (QueryException e) {
+            System.assert(true, 'L OLI a été supprimée.');
+        }
     }
 
     @isTest
     static void testGetUserProfileName() {
-        User sysAdminUser = [SELECT Id, Profile.Name FROM User WHERE Username = 'sysadmin@test.com' LIMIT 1];
-        User salesUser = [SELECT Id, Profile.Name FROM User WHERE Username = 'sales@test.com' LIMIT 1];
+        User sysAdminUser = [SELECT Id, Profile.Name FROM User WHERE Username = 'sysadmin@test.comnh0125' LIMIT 1];
+        User salesUser = [SELECT Id, Profile.Name FROM User WHERE Username = 'sales@test.comnh0125' LIMIT 1];
 
-        System.runAs(sysAdminUser) {
-            Test.startTest();
-            String profileName = OpportunityProductsViewerController.getUserProfileName();
-            Test.stopTest();
-            
-            System.assertEquals(profileName, 'System Administrator', 'Le nom du profil doit être System Administrator pour le sysAdminUser');
-        }
-
-        System.runAs(salesUser) {
-            Test.startTest();
-            String profileName = OpportunityProductsViewerController.getUserProfileName();
-            Test.stopTest();
-            
-            System.assertEquals(profileName, 'Custom: Sales Profile', 'Le nom du profil doit être Custom: Sales Profile pour le salesUser');
-        }
+    Test.startTest();
+    System.runAs(sysAdminUser) {
+        String profileName = OpportunityProductsViewerController.getUserProfileName();
+        System.assertEquals(profileName, 'System Administrator', 'Le nom du profil doit être System Administrator pour le sysAdminUser');
     }
+
+    System.runAs(salesUser) {
+        String profileName = OpportunityProductsViewerController.getUserProfileName();
+        System.assertEquals(profileName, 'Custom: Sales Profile', 'Le nom du profil doit être Custom: Sales Profile pour le salesUser');
+    }
+    Test.stopTest();
+}
 }
