@@ -72,4 +72,40 @@ public class TestDataFactory {
         );
         insert OLI;
         return OLI;
-}}
+}
+public static void createTestUsers() {
+    // Récupération des profils "System Administrator" et "Sales"
+    Profile sysAdminProfile = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1];
+    Profile salesProfile = [SELECT Id FROM Profile WHERE Name = 'Custom: Sales Profile' LIMIT 1];
+
+    User sysAdminUser = new User(
+        Username = 'sysadmin@test.com',
+        Email = 'sysadmin@test.com',
+        Alias = 'sysadmin',
+        ProfileId = sysAdminProfile.Id,
+        TimeZoneSidKey = 'America/New_York',
+        LocaleSidKey = 'en_US',
+        LanguageLocaleKey = 'en_US',
+        FirstName = 'System',
+        LastName = 'Admin',
+        CompanyName = 'Test Company',
+        IsActive = true
+    );
+    insert sysAdminUser;
+
+    User salesUser = new User(
+        Username = 'sales@test.com',
+        Email = 'sales@test.com',
+        Alias = 'sales',
+        ProfileId = salesProfile.Id,
+        TimeZoneSidKey = 'America/New_York',
+        LocaleSidKey = 'en_US',
+        LanguageLocaleKey = 'en_US',
+        FirstName = 'Sales',
+        LastName = 'User',
+        CompanyName = 'Test Company',
+        IsActive = true
+    );
+    insert salesUser;
+}
+}
